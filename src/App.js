@@ -9,6 +9,12 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
+  const [searchValue, setSearchValue] = useState('');
+
+  const searchedContacts = contacts.filter((contact) => 
+  {
+    return contact.name.toLowerCase().includes(searchValue.toLowerCase());
+  });
 
   //Function for control changing state of form input
   const handleInput = (event) => {
@@ -17,6 +23,10 @@ const App = () => {
     }else{
       setNewNumber(event.target.value)
     }
+  }
+
+  const handleSearchInput = (event) => {
+    setSearchValue(event.target.value)
   }
 
   //Function for adding a new contact in the list
@@ -42,23 +52,15 @@ const App = () => {
 
   return(
     <div>
-      <h2>Phonebook</h2>
-      <form>
-        <div>
-          name: <input className='name' value={newName} onChange={handleInput}/>
-        </div>
-        <div>
-          number: <input className='number' value={newNumber} onChange={handleInput}/>
-        </div>
-        <div>
-          <button type='submit' onClick={addContact}>add</button>
-        </div>
-      </form>
-      {/* <ContactForm newName={newName} addContact={addContact} handleInput={handleInput} /> */}
+      <h1>Phonebook</h1>
+      <div>Search: <input value={searchValue} onChange={handleSearchInput}/></div>
+      
+      <h2>Add Contact</h2>
+      <ContactForm nameValue={newName} numberValue={newNumber} addContact={addContact} handleInput={handleInput} />
         <h2>Numbers</h2>
         <div>
-          {contacts.map(contact => 
-            <div key={contact.number}>{contact.name}: {contact.number}</div>
+          {searchedContacts.map(contact => 
+            <div key={contact.name}>{contact.name}: {contact.number}</div>
           )}
         </div>
     </div>
