@@ -1,18 +1,16 @@
 import { useState } from 'react'
+import SearchFilter from './components/SearchFilter'
 import ContactForm from './components/ContactFrom';
+import ContactList from './components/ContactList'
 
 const App = () => {
-  const [contacts, setContacts] = useState([
-    {name: 'Magnus Carlsen', number: '236-455-8776'},
-    {name: 'Anish Giri', number: '665-009-2341'},
-    {name: 'Hikaru Nakamura', number: '778-665-1157'}
-  ])
+  const [contacts, setContacts] = useState([])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const [counter, setCounter] = useState(0);
 
-  const searchedContacts = contacts.filter((contact) => 
-  {
+  const searchedContacts = contacts.filter((contact) => {
     return contact.name.toLowerCase().includes(searchValue.toLowerCase());
   });
 
@@ -34,7 +32,8 @@ const App = () => {
     event.preventDefault()
     const newContact = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: counter
     }
 
     const isFound = contacts.find(contact => 
@@ -47,22 +46,21 @@ const App = () => {
       setContacts(contacts.concat(newContact))
       setNewName('')
       setNewNumber('')
+      setCounter(counter + 1);
     }
   }
 
   return(
     <div>
       <h1>Phonebook</h1>
-      <div>Search: <input value={searchValue} onChange={handleSearchInput}/></div>
+      <SearchFilter searchValue={searchValue} handleInput={handleSearchInput} />
       
       <h2>Add Contact</h2>
       <ContactForm nameValue={newName} numberValue={newNumber} addContact={addContact} handleInput={handleInput} />
-        <h2>Numbers</h2>
-        <div>
-          {searchedContacts.map(contact => 
-            <div key={contact.name}>{contact.name}: {contact.number}</div>
-          )}
-        </div>
+
+      <h2>Numbers</h2>
+      <ContactList contacts={searchedContacts}/>
+      
     </div>
   )
 }

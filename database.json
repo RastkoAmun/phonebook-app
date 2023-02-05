@@ -1,0 +1,16 @@
+{
+  "contacts": [
+    {
+      "name": "Magnus Carlsen", 
+      "number": "236-455-8776"
+    },
+    { 
+      "name": "Anish Giri", 
+      "number": "665-009-2341"
+    },
+    {
+      "name": "Hikaru Nakamura", 
+      "number": "778-665-1157"
+    }
+  ]
+}
