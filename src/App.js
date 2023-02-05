@@ -1,14 +1,23 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SearchFilter from './components/SearchFilter'
-import ContactForm from './components/ContactFrom';
+import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList'
+import axios from 'axios';
 
 const App = () => {
   const [contacts, setContacts] = useState([])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchValue, setSearchValue] = useState('');
-  const [counter, setCounter] = useState(0);
+  const [counter, setCounter] = useState(4);
+
+  useEffect(() => {
+    axios
+    .get('http://localhost:3001/contacts')
+    .then(response => {
+      setContacts(response.data);
+    })
+  }, [])
 
   const searchedContacts = contacts.filter((contact) => {
     return contact.name.toLowerCase().includes(searchValue.toLowerCase());
