@@ -3,6 +3,7 @@ import SearchFilter from './components/SearchFilter'
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList'
 import axios from 'axios';
+import serverFunctions from './services/backend.js'
 
 const App = () => {
   const [contacts, setContacts] = useState([])
@@ -11,13 +12,13 @@ const App = () => {
   const [searchValue, setSearchValue] = useState('');
   const [counter, setCounter] = useState(4);
 
-  useEffect(() => {
-    axios
-    .get('http://localhost:3001/contacts')
+  const hook = () => {
+    serverFunctions.getAll()
     .then(response => {
       setContacts(response.data);
     })
-  }, [])
+  }
+  useEffect(hook, [])
 
   const searchedContacts = contacts.filter((contact) => {
     return contact.name.toLowerCase().includes(searchValue.toLowerCase());
@@ -42,7 +43,6 @@ const App = () => {
     const newContact = {
       name: newName,
       number: newNumber,
-      id: counter
     }
 
     const isFound = contacts.find(contact => 
@@ -52,10 +52,13 @@ const App = () => {
       alert(`${newName} is already in your contacts!`)
       setNewName('')
     }else{
-      setContacts(contacts.concat(newContact))
+      axios
+        .post('http://localhost:3001/contacts', newContact)
+        .then(response => {
+          setContacts(contacts.concat(response.data))
+        })
       setNewName('')
       setNewNumber('')
-      setCounter(counter + 1);
     }
   }
 

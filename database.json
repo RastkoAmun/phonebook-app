@@ -1,19 +1,29 @@
 {
   "contacts": [
     {
-      "name": "Magnus Carlsen", 
+      "name": "Magnus Carlsen",
       "number": "236-455-8776",
       "id": 1
     },
-    { 
-      "name": "Anish Giri", 
+    {
+      "name": "Anish Giri",
       "number": "665-009-2341",
       "id": 2
     },
     {
-      "name": "Hikaru Nakamura", 
+      "name": "Hikaru Nakamura",
       "number": "778-665-1157",
       "id": 3
+    },
+    {
+      "name": "Alto Dito",
+      "number": "234-566-8158",
+      "id": 4
+    },
+    {
+      "name": "Ajkus Algirom",
+      "number": "234-588-0872",
+      "id": 5
     }
   ]
 }
