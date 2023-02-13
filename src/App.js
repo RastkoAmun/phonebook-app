@@ -2,19 +2,17 @@ import { useState, useEffect } from 'react'
 import SearchFilter from './components/SearchFilter'
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList'
+import serverFunctions from './services/serverService'
 import axios from 'axios';
-import serverFunctions from './services/backend.js'
 
 const App = () => {
   const [contacts, setContacts] = useState([])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchValue, setSearchValue] = useState('');
-  const [counter, setCounter] = useState(4);
 
   const hook = () => {
-    serverFunctions.getAll()
-    .then(response => {
+    serverFunctions.getAll().then(response => {
       setContacts(response.data);
     })
   }
@@ -52,14 +50,22 @@ const App = () => {
       alert(`${newName} is already in your contacts!`)
       setNewName('')
     }else{
-      axios
-        .post('http://localhost:3001/contacts', newContact)
-        .then(response => {
-          setContacts(contacts.concat(response.data))
-        })
+      serverFunctions.insert(newContact).then(response => {
+        setContacts(contacts.concat(response.data))
+      })
       setNewName('')
       setNewNumber('')
     }
+  }
+
+  const deleteContact = (id) => {
+    serverFunctions
+    .getSpecificContact(id)
+    .then(reponse => {
+      if(window.confirm(`Delete ${reponse.data.name}`)){
+        serverFunctions.deleteContact(id).then(hook)
+      }
+    });   
   }
 
   return(
@@ -71,7 +77,7 @@ const App = () => {
       <ContactForm nameValue={newName} numberValue={newNumber} addContact={addContact} handleInput={handleInput} />
 
       <h2>Numbers</h2>
-      <ContactList contacts={searchedContacts}/>
+      <ContactList contacts={searchedContacts} deleteContact={deleteContact}/>
       
     </div>
   )
