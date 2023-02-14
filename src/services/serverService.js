@@ -13,9 +13,13 @@ const insert = (newContact) => {
   return axios.post(baseUrl, newContact);
 }
 
+const update = (id, changedContact) => {
+  return axios.put(`${baseUrl}/${id}`, changedContact);
+}
+
 const deleteContact = (id) => {
   return axios.delete(`${baseUrl}/${id}`);
 }
 
 
-export default { getAll, insert, deleteContact, getSpecificContact }
+export default { getAll, insert, deleteContact, getSpecificContact, update }

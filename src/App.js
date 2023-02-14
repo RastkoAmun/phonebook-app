@@ -4,6 +4,7 @@ import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList'
 import serverFunctions from './services/serverService'
 import axios from 'axios';
+import serverService from './services/serverService';
 
 const App = () => {
   const [contacts, setContacts] = useState([])
@@ -43,12 +44,20 @@ const App = () => {
       number: newNumber,
     }
 
-    const isFound = contacts.find(contact => 
+    const found = contacts.find(contact => 
       contact.name === newName)
+
     
-    if(isFound){
-      alert(`${newName} is already in your contacts!`)
+    if(found){
+      if(window.confirm(`${newName} is already in your contacts. Would you like to replace the old number with a new one?`)){
+        serverService.update(found.id, newContact).then(response => {
+          setContacts(contacts.map(contact => {
+            return contact.id !== found.id ? contact : response.data
+          }))
+        })
+      }
       setNewName('')
+      setNewNumber('')
     }else{
       serverFunctions.insert(newContact).then(response => {
         setContacts(contacts.concat(response.data))
@@ -62,7 +71,7 @@ const App = () => {
     serverFunctions
     .getSpecificContact(id)
     .then(reponse => {
-      if(window.confirm(`Delete ${reponse.data.name}`)){
+      if(window.confirm(`Delete contact with the name ${reponse.data.name}?`)){
         serverFunctions.deleteContact(id).then(hook)
       }
     });   
