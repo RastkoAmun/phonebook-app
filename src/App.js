@@ -3,14 +3,15 @@ import SearchFilter from './components/SearchFilter'
 import ContactForm from './components/ContactForm';
 import ContactList from './components/ContactList'
 import serverFunctions from './services/serverService'
-import axios from 'axios';
 import serverService from './services/serverService';
+import NotificationMessage from './components/NotificationMessage';
 
 const App = () => {
   const [contacts, setContacts] = useState([])
   const [newName, setNewName] = useState('');
   const [newNumber, setNewNumber] = useState('');
   const [searchValue, setSearchValue] = useState('');
+  const [notificationMessage, setNotificationMessage] = useState(null);
 
   const hook = () => {
     serverFunctions.getAll().then(response => {
@@ -36,6 +37,13 @@ const App = () => {
     setSearchValue(event.target.value)
   }
 
+  const displayMessage = (message) => {
+    setNotificationMessage(message);
+      setTimeout(() => {
+        setNotificationMessage(null)
+      }, 5000)
+  } 
+
   //Function for adding a new contact in the list
   const addContact = (event) => {
     event.preventDefault()
@@ -56,30 +64,39 @@ const App = () => {
           }))
         })
       }
+
+      displayMessage('Contact number successfully  changed.')
       setNewName('')
       setNewNumber('')
     }else{
-      serverFunctions.insert(newContact).then(response => {
+      serverFunctions.insert(newContact)
+      .then(response => {
         setContacts(contacts.concat(response.data))
       })
+
+      displayMessage('Contact successfully added.')
       setNewName('')
       setNewNumber('')
     }
   }
 
   const deleteContact = (id) => {
+    setNotificationMessage(null);
     serverFunctions
     .getSpecificContact(id)
     .then(reponse => {
       if(window.confirm(`Delete contact with the name ${reponse.data.name}?`)){
         serverFunctions.deleteContact(id).then(hook)
+        displayMessage('Contact successfully deleted.')  
       }
-    });   
+    });
   }
 
   return(
     <div>
       <h1>Phonebook</h1>
+      <NotificationMessage message={notificationMessage}/>
+
       <SearchFilter searchValue={searchValue} handleInput={handleSearchInput} />
       
       <h2>Add Contact</h2>

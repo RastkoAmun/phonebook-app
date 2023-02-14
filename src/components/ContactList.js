@@ -1,5 +1,4 @@
 import ContactInfo from './ContactInfo'
-import serverFunctions from '../services/serverService'
 
 const ContactList = ({contacts, deleteContact}) => {
 

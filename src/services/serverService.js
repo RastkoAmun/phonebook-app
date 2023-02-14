@@ -21,5 +21,4 @@ const deleteContact = (id) => {
   return axios.delete(`${baseUrl}/${id}`);
 }
 
-
-export default { getAll, insert, deleteContact, getSpecificContact, update }
+export default { getAll, getSpecificContact, insert, update, deleteContact }
